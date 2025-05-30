@@ -46,9 +46,9 @@ def urlpatterns():
 def remove_menu_if_unverified(request, menu_items):
     """Remove the sidebar menu items if the user is unverified."""
     if (
-        settings.WAGTAIL_2FA_REQUIRED
-        and getattr(request.user, "enable_2fa", True)
-        and not request.user.is_verified()
+            settings.WAGTAIL_2FA_REQUIRED
+            and getattr(request.user, "enable_2fa", True)
+            and not request.user.is_verified()
     ):
         menu_items.clear()
         menu_items.append(
@@ -69,7 +69,7 @@ def register(request):
 
 
 @hooks.register("register_user_listing_buttons")
-def register_user_listing_buttons(context, user):
+def register_user_listing_buttons(user, request_user):
     yield UserListingButton(
         _("Manage 2FA"),
         reverse("wagtail_2fa_device_list", kwargs={"user_id": user.id}),
@@ -84,5 +84,5 @@ def register_2fa_permission():
         return Permission.objects.filter(
             content_type__app_label="wagtailadmin", codename="enable_2fa"
         )
-
+    
     return Permission.objects.none()
